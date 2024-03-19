@@ -1,0 +1,310 @@
+﻿{
+  "Scenario": "Classification",
+  "DataSource": {
+    "Version": 3,
+    "EscapeCharacter": "\"",
+    "ReadMultiLines": false,
+    "KeepDiacritics": false,
+    "KeepPunctuations": false,
+    "AllowQuoting": false,
+    "Type": "TabularFile",
+    "FilePath": "C:\\Users\\Utente\\Desktop\\GitHub Repos\\ProjectWork\\CRP\\MachineLearningPrediction\\Datasets\\dataset.csv",
+    "Delimiter": ",",
+    "DecimalMarker": ".",
+    "HasHeader": true,
+    "ColumnProperties": [
+      {
+        "ColumnName": "disease",
+        "ColumnPurpose": "Label",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "symptoms",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "cures",
+        "ColumnPurpose": "Ignore",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "doctor",
+        "ColumnPurpose": "Ignore",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "risk level",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      }
+    ]
+  },
+  "Environment": {
+    "Type": "LocalCPU",
+    "Version": 1
+  },
+  "RunHistory": {
+    "Version": 3,
+    "Type": "Result",
+    "Trials": [
+      {
+        "Version": 1,
+        "Type": "Trial",
+        "TrainerName": "LbfgsLogisticRegressionOva",
+        "Score": -0.59862994002126091,
+        "RuntimeInSeconds": 4.584,
+        "Parameter": {
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e7 * e11",
+          "e0": {
+            "InputColumnName": "symptoms",
+            "OutputColumnName": "symptoms"
+          },
+          "e1": {
+            "InputColumnName": "risk level",
+            "OutputColumnName": "risk level"
+          },
+          "e11": {
+            "OutputColumnName": "PredictedLabel",
+            "InputColumnName": "PredictedLabel"
+          },
+          "e2": {
+            "InputColumnNames": [
+              "symptoms",
+              "risk level"
+            ],
+            "OutputColumnName": "Features"
+          },
+          "e3": {
+            "OutputColumnName": "disease",
+            "InputColumnName": "disease",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e7": {
+            "L1Regularization": 0.5737592,
+            "L2Regularization": 0.03125,
+            "LabelColumnName": "disease",
+            "FeatureColumnName": "Features"
+          }
+        }
+      },
+      {
+        "Version": 1,
+        "Type": "Trial",
+        "TrainerName": "SdcaMaximumEntropyMulti",
+        "Score": -2.0695484959836961,
+        "RuntimeInSeconds": 1.162,
+        "Parameter": {
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e9 * e11",
+          "e0": {
+            "InputColumnName": "symptoms",
+            "OutputColumnName": "symptoms"
+          },
+          "e1": {
+            "InputColumnName": "risk level",
+            "OutputColumnName": "risk level"
+          },
+          "e11": {
+            "OutputColumnName": "PredictedLabel",
+            "InputColumnName": "PredictedLabel"
+          },
+          "e2": {
+            "InputColumnNames": [
+              "symptoms",
+              "risk level"
+            ],
+            "OutputColumnName": "Features"
+          },
+          "e3": {
+            "OutputColumnName": "disease",
+            "InputColumnName": "disease",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e9": {
+            "L1Regularization": 2.394157,
+            "L2Regularization": 0.0466440022,
+            "LabelColumnName": "disease",
+            "FeatureColumnName": "Features"
+          }
+        }
+      },
+      {
+        "Version": 1,
+        "Type": "Trial",
+        "TrainerName": "SdcaMaximumEntropyMulti",
+        "Score": -2.2309187121680578,
+        "RuntimeInSeconds": 0.759,
+        "Parameter": {
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e9 * e11",
+          "e0": {
+            "InputColumnName": "symptoms",
+            "OutputColumnName": "symptoms"
+          },
+          "e1": {
+            "InputColumnName": "risk level",
+            "OutputColumnName": "risk level"
+          },
+          "e11": {
+            "OutputColumnName": "PredictedLabel",
+            "InputColumnName": "PredictedLabel"
+          },
+          "e2": {
+            "InputColumnNames": [
+              "symptoms",
+              "risk level"
+            ],
+            "OutputColumnName": "Features"
+          },
+          "e3": {
+            "OutputColumnName": "disease",
+            "InputColumnName": "disease",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e9": {
+            "L1Regularization": 1.0,
+            "L2Regularization": 0.1,
+            "LabelColumnName": "disease",
+            "FeatureColumnName": "Features"
+          }
+        }
+      },
+      {
+        "Version": 1,
+        "Type": "Trial",
+        "TrainerName": "FastForestOva",
+        "Score": -2.4226594094429852,
+        "RuntimeInSeconds": 23.303,
+        "Parameter": {
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e5 * e11",
+          "e0": {
+            "InputColumnName": "symptoms",
+            "OutputColumnName": "symptoms"
+          },
+          "e1": {
+            "InputColumnName": "risk level",
+            "OutputColumnName": "risk level"
+          },
+          "e11": {
+            "OutputColumnName": "PredictedLabel",
+            "InputColumnName": "PredictedLabel"
+          },
+          "e2": {
+            "InputColumnNames": [
+              "symptoms",
+              "risk level"
+            ],
+            "OutputColumnName": "Features"
+          },
+          "e3": {
+            "OutputColumnName": "disease",
+            "InputColumnName": "disease",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e5": {
+            "NumberOfTrees": 5,
+            "NumberOfLeaves": 7,
+            "FeatureFraction": 0.944719553,
+            "LabelColumnName": "disease",
+            "FeatureColumnName": "Features"
+          }
+        }
+      },
+      {
+        "Version": 1,
+        "Type": "Trial",
+        "TrainerName": "FastForestOva",
+        "Score": -2.5239237399239629,
+        "RuntimeInSeconds": 20.005,
+        "Parameter": {
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e5 * e11",
+          "e0": {
+            "InputColumnName": "symptoms",
+            "OutputColumnName": "symptoms"
+          },
+          "e1": {
+            "InputColumnName": "risk level",
+            "OutputColumnName": "risk level"
+          },
+          "e11": {
+            "OutputColumnName": "PredictedLabel",
+            "InputColumnName": "PredictedLabel"
+          },
+          "e2": {
+            "InputColumnNames": [
+              "symptoms",
+              "risk level"
+            ],
+            "OutputColumnName": "Features"
+          },
+          "e3": {
+            "OutputColumnName": "disease",
+            "InputColumnName": "disease",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e5": {
+            "NumberOfTrees": 4,
+            "NumberOfLeaves": 4,
+            "FeatureFraction": 1.0,
+            "LabelColumnName": "disease",
+            "FeatureColumnName": "Features"
+          }
+        }
+      }
+    ],
+    "Estimators": {
+      "e0": "FeaturizeText",
+      "e1": "FeaturizeText",
+      "e2": "Concatenate",
+      "e3": "MapValueToKey",
+      "e4": "FastTreeOva",
+      "e5": "FastForestOva",
+      "e6": "LightGbmMulti",
+      "e7": "LbfgsLogisticRegressionOva",
+      "e8": "LbfgsMaximumEntropyMulti",
+      "e9": "SdcaMaximumEntropyMulti",
+      "e10": "SdcaLogisticRegressionOva",
+      "e11": "MapKeyToValue"
+    },
+    "Schema": "e0 * e1 * e2 * e3 * (e4 + e5 + e6 + e7 + e8 + e9 + e10) * e11",
+    "MetricName": "LogLoss-Reduction",
+    "ModelFilePath": "C:\\Users\\Utente\\Desktop\\GitHub Repos\\ProjectWork\\CRP\\MachineLearningPrediction\\Engines\\IllnessPredictionEngine.mlnet"
+  },
+  "Type": "TrainingConfig",
+  "Version": 5,
+  "TrainingOption": {
+    "Version": 2,
+    "Subsampling": false,
+    "Tuner": "eci-cfo",
+    "Type": "ClassificationTrainingOption",
+    "TrainingTime": 800,
+    "OptimizeMetric": "LogLoss-Reduction",
+    "LabelColumn": "disease",
+    "AvailableTrainers": [
+      "SDCA",
+      "LBFGS",
+      "LGBM",
+      "FASTTREE",
+      "FASTFOREST"
+    ],
+    "ValidationOption": {
+      "Version": 0,
+      "Type": "CrossValidationValidationOption",
+      "NumberOfFolds": 5
+    }
+  }
+}

@@ -5,7 +5,9 @@ VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRP", "CRP\CRP.csproj", "{D61FA91B-7D96-4911-826D-F19B2F2CF70C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{EF75480B-C21A-423C-AA4E-3C8D742E2465}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{EF75480B-C21A-423C-AA4E-3C8D742E2465}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MachineLearningPrediction", "MachineLearningPrediction\MachineLearningPrediction.csproj", "{0EACAF20-EF82-4AA4-9009-BA3716B88375}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{EF75480B-C21A-423C-AA4E-3C8D742E2465}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF75480B-C21A-423C-AA4E-3C8D742E2465}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF75480B-C21A-423C-AA4E-3C8D742E2465}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EACAF20-EF82-4AA4-9009-BA3716B88375}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EACAF20-EF82-4AA4-9009-BA3716B88375}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EACAF20-EF82-4AA4-9009-BA3716B88375}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EACAF20-EF82-4AA4-9009-BA3716B88375}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

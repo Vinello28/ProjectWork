@@ -7,9 +7,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using DataAccessLayer.Models;
+using DataAccessLayer.Services;
+using MachineLearningPrediction.Services;
+using Syncfusion.Blazor;
 
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSyncfusionBlazor();
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -27,7 +31,11 @@ var connectionStringCL = builder.Configuration.GetConnectionString("ClConnection
 builder.Services.AddDbContext<ClmanagerContext>(options =>
     options.UseSqlServer(connectionStringCL));
 
-
+builder.Services.AddTransient<PatientService>();
+builder.Services.AddTransient<MedicalRecordService>();
+builder.Services.AddTransient<IllnessService>();
+builder.Services.AddTransient<SymptomService>();
+builder.Services.AddTransient<PredictionService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
