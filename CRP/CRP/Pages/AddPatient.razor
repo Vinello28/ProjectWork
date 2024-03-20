@@ -1,0 +1,61 @@
+﻿
+@using DataAccessLayer.Models;
+@using DataAccessLayer.Services
+@inject PatientService patientService
+@inject NavigationManager NavigationManager
+
+@page "/addpatient"
+
+<h3>Add Patient</h3>
+<hr />
+
+<form>
+    <div class="row">
+        <div class="col-md-8">
+        <div class="form-group">
+            <label for="FirstName" class="control-label"> First Name</label>
+                <input for="FirstName" class="form-control"  @bind="@obj.FirstName" />
+        </div>
+            <div class="form-group">
+                <label for="DateOfBirth">Date Of Birth</label>
+                <InputDate id="DateOfBirth" class="form-control" @bind-Value="obj.DateOfBirth" />
+            </div>
+             <div class="form-group">
+                <label for="LastName" class="control-label"> Last Name</label>
+                <input for="LastName" class="form-control" @bind="@obj.LastName" />
+            </div>
+            <div class="form-group">
+                <label for="Gender" class="control-label"> Gender</label>
+               <select @bind="@obj.Gender" class="form-control">
+                    <option value="">-Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+        </div>
+    </div>
+     <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="@CreateEmployee" value="Save"/>
+                <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel"/>
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+    Patient obj = new Patient();
+    protected async void CreateEmployee()
+    {
+        await patientService.AddPatient(obj);
+        NavigationManager.NavigateTo("patientlist");
+    }
+    
+    void Cancel()
+    {
+        obj=new Patient();
+        NavigationManager.NavigateTo("patientlist");
+    }
+
+}

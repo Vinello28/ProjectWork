@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRP", "CRP\CRP.csproj", "{D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{EF75480B-C21A-423C-AA4E-3C8D742E2465}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MachineLearningPrediction", "MachineLearningPrediction\MachineLearningPrediction.csproj", "{0EACAF20-EF82-4AA4-9009-BA3716B88375}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MachineLearningPrediction", "MachineLearningPrediction\MachineLearningPrediction.csproj", "{0EACAF20-EF82-4AA4-9009-BA3716B88375}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

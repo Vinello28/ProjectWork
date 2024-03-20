@@ -1,0 +1,70 @@
+﻿@page "/editpatient/{Id}"
+
+@using DataAccessLayer.Models
+@using DataAccessLayer.Services
+@inject PatientService patientService
+@inject NavigationManager NavigationManager
+
+<h1>Edit Patient</h1>
+<hr />
+
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <input form="Name" class="form-control" @bind="@obj.PatientId" />
+            </div>
+            <div class="form-group">
+            <label for="FirstName" class="control-label"> First Name</label>
+                <input for="FirstName" class="form-control"  @bind="@obj.FirstName" />
+        </div>
+             <div class="form-group">
+                <label for="LastName" class="control-label"> Last Name</label>
+                <input for="LastName" class="form-control" @bind="@obj.LastName" />
+            </div>
+            <div >
+                <label for="DateOfBirth">Date Of Birth</label>
+                <InputDate id="DateOfBirth" class="form-control" @bind-Value="obj.DateOfBirth"></InputDate>
+            </div>
+            <div class="form-group">
+                <label for="Gender" class="control-label">Gender</label>
+                <select @bind="@obj.Gender" class="form-control">
+                    <option value="">-Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="@UpdateEmployee" value="Update" />
+                <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    Patient obj = new Patient();
+
+    protected override async Task OnInitializedAsync()
+    {
+        obj = await patientService.GetPatientById(Convert.ToInt32(Id));
+    }
+    protected async void UpdateEmployee()
+    {
+        await patientService.UpdatePatient(obj);
+        NavigationManager.NavigateTo("patientlist");
+    }
+
+    void Cancel()
+    {
+        obj=new Patient();
+        NavigationManager.NavigateTo("patientlist");
+    }
+}

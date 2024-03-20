@@ -1,0 +1,62 @@
+﻿@page "/patientlist"
+
+@using DataAccessLayer.Models;
+@using DataAccessLayer.Services;
+@using Syncfusion.Blazor.Spinner;
+@inject PatientService patientService
+
+
+<h1>PatientList</h1>
+<br />
+<NavLink class="nav-link" href="addpatient">
+    <span class="oi oi-plus" aria-hidden="true">Add New Patient</span>
+</NavLink>
+<br />
+@if (patients == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Date Of Birth</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in patients)
+            {
+                <tr>
+                    <td>@item.PatientId</td>
+                    <td>@item.FirstName</td>
+                    <td>@item.LastName</td>
+                    <td>@item.DateOfBirth</td>
+                    <td>
+                        <a class="nav-link" href="editpatient/@item.PatientId">
+                            <span class="oi oi-pencil" aria-hidden="true">Edit</span>
+                        </a>
+                        <a class="nav-link" href="deletepatient/@item.PatientId">
+                            <span class="oi oi-trash" aria-hidden="true">Delete</span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    List <Patient> patients;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        patients = await patientService.GetAllPatients();
+    }
+
+
+}
