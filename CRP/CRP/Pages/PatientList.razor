@@ -18,29 +18,32 @@
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Date Of Birth</th>
+    <table class="table table-bordered table-striped table-hover table-responsive table-responsive-sm">
+        <thead class="table-primary">
+            <tr class="row">
+                <th class="col-sm-2">Id</th>
+                <th class="col-sm-2">First Name</th>
+                <th class="col-sm-2">Last Name</th>
+                <th class="col-sm-2">Date Of Birth</th>
+                <th class="col-sm-2">Has Diagnosis</th>
+                <th class="col-sm-2">Actions</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in patients)
             {
-                <tr>
-                    <td>@item.PatientId</td>
-                    <td>@item.FirstName</td>
-                    <td>@item.LastName</td>
-                    <td>@item.DateOfBirth</td>
-                    <td>
-                        <a class="nav-link" href="editpatient/@item.PatientId">
+                <tr class="row">
+                    <td class="col-sm-2">@item.PatientId</td>
+                    <td class="col-sm-2">@item.FirstName</td>
+                    <td class="col-sm-2">@item.LastName</td>
+                    <td class="col-sm-2">@item.DateOfBirth</td>
+                    <td class="col-sm-2">@item.HasMedicalRecord()</td>
+                    <td class="col-sm-2">
+                        <a class="w-50" href="editpatient/@item.PatientId">
                             <span class="oi oi-pencil" aria-hidden="true">Edit</span>
                         </a>
-                        <a class="nav-link" href="deletepatient/@item.PatientId">
-                            <span class="oi oi-trash" aria-hidden="true">Delete</span>
+                        <a class="w-50" href="deletepatient/@item.PatientId">
+                            <span class="oi oi-trash" style="padding-left:50px;color:darkred" aria-hidden="true">Delete</span>
                         </a>
                     </td>
                 </tr>

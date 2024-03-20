@@ -34,4 +34,16 @@ public partial class Patient
 
     [InverseProperty("Patient")]
     public virtual ICollection<MedicalRecord> MedicalRecords { get; set; } = new List<MedicalRecord>();
+
+    /// <summary>
+    /// Method to check if the patient has any medical records
+    /// </summary>
+    public string HasMedicalRecord()
+    {
+        if (MedicalRecords.Count > 0)
+        {
+            return "Yes";
+        }
+        return "No";
+    }
 }
