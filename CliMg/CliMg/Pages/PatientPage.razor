@@ -1,0 +1,178 @@
+﻿
+
+@page "/patientpage"
+
+@using CliMg.Data.Models
+@using CliMg.Data.Services
+@using Microsoft.AspNetCore.Components.Forms
+
+@inject PatientService PatientService
+@inject NavigationManager NavigationManager
+
+
+<PageTitle>Patient</PageTitle>
+
+<h1>Patients</h1>
+
+
+@if (showForm)
+{
+    <EditForm Model="@patient" OnValidSubmit="@AddPatient">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="name">Nome:</label>
+            <InputText id="name" class="form-control" @bind-Value="@patient.Name" />
+            <ValidationMessage For="@(() => patient.Name)" />
+        </div>
+        <div class="form-group">
+            <label for="surname">Cognome:</label>
+            <InputText id="surname" class="form-control" @bind-Value="@patient.Surname" />
+            <ValidationMessage For="@(() => patient.Surname)" />
+                </div>
+        <div class="form-group">
+        <label for="dateofbirth">Data di Nascita:</label>
+            <InputDate id="dateofbirth" class="form-control" @bind-Value="@patient.DateOfBirth" />
+            <ValidationMessage For="@(() => patient.DateOfBirth)" />
+        </div>
+        <br />
+        <button type="submit" class="btn btn-primary">Add patient</button>
+        <button type="button" class="btn btn-secondary" @onclick="ToggleForm">Cancel</button>
+    </EditForm>
+}
+else
+{
+    <button class="oi oi-people" @onclick="ToggleForm">Add Patient</button>
+}
+
+
+@if(Patients== null)
+{
+    @Task.Delay(2000);
+    <br />
+    <br />
+    <div align="center" class="spinner-border text-primary" role="status">
+    </div>
+}
+else if(showForm==false)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Date of Birth</th>
+                <th>Age</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var patient in Patients)
+            {
+                <tr>
+                    <td>@patient.Name</td>
+                    <td>@patient.Surname</td>
+                    <td>@patient.DateOfBirth.ToShortDateString()</td>
+                    <td>@patient.Age()</td>
+                    <td>
+                        <button class="btn btn-secondary" @onclick="() => EditPatient(patient)">Edit</button>
+                        <button class="btn btn-danger" @onclick="() => DeletePatient(patient)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (SelectedPatient != null && showForm==false)
+    {
+        <h2>Edit Patient</h2>
+
+        <EditForm Model="@SelectedPatient" OnValidSubmit="@SubmitEditPatient">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label for="name">Nome:</label>
+                <InputText id="name" class="form-control" @bind-Value="@SelectedPatient.Name" />
+                <ValidationMessage For="@(() => SelectedPatient.Name)" />
+            </div>
+            <div class="form-group">
+                <label for="surname">Cognome:</label>
+                <InputText id="surname" class="form-control" @bind-Value="@SelectedPatient.Surname" />
+                <ValidationMessage For="@(() => SelectedPatient.Surname)" />
+            </div>
+            <div class="form-group">
+                <label for="dateofbirth">Data di Nascita:</label>
+                <InputDate id="dateofbirth" class="form-control" @bind-Value="@SelectedPatient.DateOfBirth" />
+                <ValidationMessage For="@(() => SelectedPatient.DateOfBirth)" />
+            </div>
+            <br />
+            <button type="submit" class="btn btn-primary">Update patient</button>
+            <button type="button" class="btn btn-secondary" @onclick="CancelEditPatient">Cancel</button>
+        </EditForm>
+    }
+}
+
+@code {
+    private List<Patient> Patients { get; set; }
+    private Patient SelectedPatient { get; set; }
+
+    private Patient patient = new Patient();
+
+    private bool showForm = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Patients = await PatientService.GetAllPatientsAsync();
+    }
+
+    private async void AddPatient()
+    {
+        showForm = false;
+        await PatientService.AddPatientAsync(patient);
+        Refresh();
+    }
+
+
+    private void EditPatient(Patient patient)
+    {
+        SelectedPatient = patient;
+    }
+
+    private async Task SubmitEditPatient()
+    {
+        await PatientService.UpdatePatientAsync(SelectedPatient);
+        SelectedPatient = null;
+        Refresh();
+    }
+
+    private void CancelEditPatient()
+    {
+        SelectedPatient = null;
+        Refresh();
+
+    }
+
+    private async void DeletePatient(Patient patient)
+    {
+        await PatientService.DeletePatientAsync(patient);
+        Patients.Remove(patient);
+        Refresh();
+    }
+
+    private void ToggleForm()
+    {
+        showForm = !showForm;
+    }
+
+
+    private async Task Refresh()
+    {
+        showForm = false;
+        patient = new Patient();
+        Patients = await PatientService.GetAllPatientsAsync();
+        StateHasChanged();
+    }
+
+}

@@ -1,0 +1,261 @@
+﻿@page "/prescriptpage"
+
+@using CliMg.Data.Models
+@using CliMg.Data.Services
+@using Microsoft.AspNetCore.Components.Forms
+
+@inject PrescriptionService prescriptionService
+@inject NavigationManager NavigationManager
+
+
+<PageTitle>Prescriptions</PageTitle>
+
+<h1>Prescription module</h1>
+<br />
+
+
+    @if (showForm)
+    {
+        @if(Patients!=null){
+            <h2>Select a patient</h2>
+            <select @bind="selectedPatientId">
+                @foreach (var patient in Patients)
+                {
+                    <option value="@patient.PatientId">@($"{patient.Name} {patient.Surname}")</option>
+                }
+            </select>
+        }else{
+            <div align="center">
+                <div class="spinner-border text-primary" role="status"></div>
+            </div>
+        }
+
+        @if(selectedPatient!=null && selectedPatientId!=0) {
+            
+            <EditForm Model="@prescription" OnValidSubmit="@AddPrescription">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label for="drug">Drug:</label>
+                <InputText id="drug" class="form-control" @bind-Value="@prescription.Drug" />
+                <ValidationMessage For="@(() =>prescription.Drug)" />
+            </div>
+
+            <div class="form-group">
+                <label for="dosage">Dosage(mg):</label>
+                <InputNumber id="dosage" class="form-control" @bind-Value="@prescription.Dosage" />
+                <ValidationMessage For="@(() => prescription.Dosage)" />
+            </div>
+
+            <div class="form-group">
+                <label for="frequency">Frequency:</label>
+                <InputText id="frequency" class="form-control" @bind-Value="@prescription.Frequency" />
+                <ValidationMessage For="@(() => prescription.Frequency)" />
+            </div>
+
+            <div class="form-group">
+                <label for="duration">Duration(days):</label>
+                <InputDate id="duration" class="form-control" @bind-Value="@prescription.Duration" />
+                <ValidationMessage For="@(() => prescription.Duration)" />
+            </div>
+
+            <div class="form-group">
+                <label for="notes">Notes:</label>
+                <InputText id="notes" class="form-control" @bind-Value="@prescription.Notes" />
+                <ValidationMessage For="@(() => prescription.Notes)" />
+            </div>
+            <br />
+            <button type="submit" class="btn btn-primary">Add Prescription</button>
+            <button type="button" class="btn btn-secondary" @onclick="ToggleForm">Cancel</button>
+            </EditForm>
+        }
+    }
+    else
+    {
+        <button class="oi oi-people" @onclick="ToggleForm">Add Prescription</button>
+    }
+
+
+    @if (Prescriptions == null)
+    {
+        <br />
+        <br />
+        <div align="center">
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
+        <br />
+
+        @if(true){
+            <div align="center">Something goes wrong:(</div>
+        }
+       
+    }
+    else if (Prescriptions != null && !showForm)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Patient</th>
+                    <th>Drug</th>
+                    <th>Dosage</th>
+                    <th>Freq</th>
+                    <th>Duration</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var prescription in Prescriptions)
+                {
+                    <tr>
+                        <td>@prescription.PatientId</td>
+                        <td>@prescription.Drug</td>
+                        <td>@prescription.Dosage</td>
+                        <td>@prescription.Frequency</td>
+                        <td>@prescription.Duration.ToShortDateString()</td>
+                        <td>@prescription.Notes</td>
+                        <td>
+                            <button class="btn btn-secondary" @onclick="() => EditPrescription(prescription)">Edit</button>
+                            <button class="btn btn-danger" @onclick="() => DeletePrescription(prescription)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (SelectedPrescription != null && showForm == false)
+        {
+            <h2>Edit Prescription</h2>
+
+            <EditForm Model="@SelectedPrescription" OnValidSubmit="@SubmitEditPrescription">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-group">
+                    <label for="drug">Drug:</label>
+                    <InputText id="drug" class="form-control" @bind-Value="@prescription.Drug" />
+                    <ValidationMessage For="@(() =>prescription.Drug)" />
+                </div>
+
+                <div class="form-group">
+                    <label for="dosage">Dosage(mg):</label>
+                    <InputNumber id="dosage" class="form-control" @bind-Value="@prescription.Dosage" />
+                    <ValidationMessage For="@(() => prescription.Dosage)" />
+                </div>
+
+                <div class="form-group">
+                    <label for="frequency">Frequency:</label>
+                    <InputNumber id="frequency" class="form-control" @bind-Value="@prescription.Frequency" />
+                    <ValidationMessage For="@(() => prescription.Frequency)" />
+                </div>
+
+                <div class="form-group">
+                    <label for="duration">Duration(days):</label>
+                    <InputDate id="duration" class="form-control" @bind-Value="@prescription.Duration" />
+                    <ValidationMessage For="@(() => prescription.Duration)" />
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Notes:</label>
+                    <InputText id="notes" class="form-control" @bind-Value="@prescription.Notes" />
+                    <ValidationMessage For="@(() => prescription.Notes)" />
+                </div>
+         
+                <br />
+                <button type="submit" class="btn btn-primary">Update prescription</button>
+                <button type="button" class="btn btn-secondary" @onclick="CancelEditPrescription">Cancel</button>
+            </EditForm>
+        }
+    }
+
+
+@code {
+    private List<Prescription> Prescriptions { get; set; }
+    private Prescription SelectedPrescription { get; set; }
+
+    private List<Patient> Patients { get; set; }
+
+    private Patient selectedPatient =new Patient();
+
+    private int selectedPatientId { get; set; }
+
+    private Prescription prescription = new Prescription();
+
+    private bool showForm = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        selectedPatientId = 0;
+        Patients= await prescriptionService.GetPatientListAsync();
+        Prescriptions = await prescriptionService.GetAllPrescriptionsAsync();
+    }
+
+    protected override void OnParametersSet()
+    {
+        
+        if (selectedPatientId != 0)
+        {
+            selectedPatient = Patients.FirstOrDefault(p => p.PatientId == selectedPatientId);
+            StateHasChanged();
+        }
+    }
+
+    private async void AddPrescription()
+    {
+        showForm = false;
+        prescription.PatientId = selectedPatientId;
+        await prescriptionService.AddPrescriptionAsync(prescription);
+        //Prescriptions = await prescriptionService.GetAllPrescriptionsAsync();
+        //StateHasChanged();
+        Refresh();
+    }
+
+
+    private void EditPrescription(Prescription p)
+    {
+        SelectedPrescription = p;
+    }
+
+    private async Task SubmitEditPrescription()
+    {
+        await prescriptionService.UpdatePrescriptionAsync(SelectedPrescription);
+        SelectedPrescription= null;
+        Refresh();
+    }
+
+    private void CancelEditPrescription()
+    {
+        SelectedPrescription = new Prescription();
+        Refresh();
+
+    }
+
+    private async void DeletePrescription(Prescription pr)
+    {
+        await prescriptionService.DeletePrescriptionAsync(pr);
+        Prescriptions.Remove(pr);
+        //Prescriptions = await prescriptionService.GetAllPrescriptionsAsync();
+        //StateHasChanged();
+        Refresh();
+    }
+
+    private void ToggleForm()
+    {
+        selectedPatient=new Patient();
+        showForm = !showForm;
+    }
+
+
+    private async Task Refresh()
+    {
+        showForm = false;
+        selectedPatient=null;
+        selectedPatientId = 0;
+        prescription=new Prescription();
+        Patients= await prescriptionService.GetPatientListAsync();
+        Prescriptions = await prescriptionService.GetAllPrescriptionsAsync();
+        StateHasChanged();
+    }
+
+}
