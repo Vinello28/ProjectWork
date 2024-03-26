@@ -62,6 +62,20 @@ namespace CliMg.Data.Services
         /// <returns></returns>
         public async Task DeletePatientByIdAsync(int id)
         {
+            var prescriptions = await _context.Prescriptions.Where(p => p.PatientId == id).ToListAsync();
+            foreach (var prescription in prescriptions)
+            {
+                _context.Prescriptions.Remove(prescription);
+            }
+            await _context.SaveChangesAsync();
+
+            var appointments = await _context.Appointments.Where(a => a.Patient.PatientId == id).ToListAsync();
+            foreach (var appointment in appointments)
+            {
+                _context.Appointments.Remove(appointment);
+            }
+            await _context.SaveChangesAsync();
+
             var patient = await _context.Patients.FindAsync(id);
             _context.Patients.Remove(patient);
             await _context.SaveChangesAsync();
@@ -74,6 +88,20 @@ namespace CliMg.Data.Services
         /// <returns></returns>
         public async Task DeletePatientAsync(Patient patient)
         {
+            var prescriptions = await _context.Prescriptions.Where(p => p.PatientId == patient.PatientId).ToListAsync();
+            foreach (var prescription in prescriptions)
+            {
+                _context.Prescriptions.Remove(prescription);
+            }
+            await _context.SaveChangesAsync();
+
+            var appointments = await _context.Appointments.Where(a => a.Patient.PatientId == patient.PatientId).ToListAsync();
+            foreach (var appointment in appointments)
+            {
+                _context.Appointments.Remove(appointment);
+            }
+            await _context.SaveChangesAsync();
+
             _context.Patients.Remove(patient);
             await _context.SaveChangesAsync();
         }

@@ -1,0 +1,239 @@
+﻿@page "/appointmentpage"
+
+@using Data.Models
+@using Data.Services
+@inject AppointmentService appointmentService
+
+<h1>Appointments</h1>
+
+<br />
+<br />
+@if(!showForm && !showEditForm){
+    <button class="oi oi-calendar" style="background-color:transparent;border:none; width:150px" @onclick="() => showForm = !showForm">Add Appointment</button>
+}
+
+@if(showForm){
+    
+    <div class="form-container">
+    <!-- Calendario Syncfusion SfCalendar per selezionare la data -->
+    <div class="form-group">
+        <label>Date:</label>
+        <SfCalendar TValue="DateTime" @bind-Value="selectedDate"></SfCalendar>
+    </div>
+
+    <!-- Menu a tendina per selezionare il paziente -->
+    <div class="form-group">
+        <label>Patient:</label>
+        <select @bind="selectedPatientId" class="form-control">
+            @if(patients!=null){<option value="">Select Patient</option>
+            @foreach (var patient in patients)
+            {
+                <option value="@patient.PatientId">@patient.Name</option>
+            }}
+        </select>
+    </div>
+
+    <!-- Campo per inserire la descrizione dell'appuntamento -->
+    <div class="form-group">
+        <label>Description:</label>
+        <input type="text" @bind="description" class="form-control" placeholder="Enter description">
+    </div>
+
+    <!-- Campo per inserire le note -->
+    <div class="form-group">
+        <label>Notes:</label>
+        <input type="text" @bind="notes" class="form-control" placeholder="Enter notes">
+    </div>
+
+    <button @onclick="AddAppointment" class="btn btn-primary">Add Appointment</button>
+    <button @onclick="Cancel" class="btn btn-secondary">Cancel</button>
+
+</div>
+}
+<br />
+<br />
+
+<!-- Elenco degli appuntamenti esistenti -->
+@if (!showForm && appointments != null && appointments.Any())
+{
+    <h4>Existing Appointments:</h4>
+    <table class="table table-bordered table-striped table-hover table-responsive table-responsive-sm">
+        <thead class="table-primary">
+            <tr class="row">
+                <th class="col-sm-2">Id</th>
+                <th class="col-sm-2">Date</th>
+                <th class="col-sm-2">Description</th>
+                <th class="col-sm-2">Patient</th>
+                <th class="col-sm-2">Notes</th>
+                <th class="col-sm-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var appointment in appointments)
+            {
+                <tr class="row">
+                    <td class="col-sm-2">@appointment.AppointmentId</td>
+                    <td class="col-sm-2">@appointment.Date.ToShortDateString()</td>
+                    <td class="col-sm-2">@appointment.Description</td>
+                    <td class="col-sm-2">@appointment.Patient.Name</td>
+                    <td class="col-sm-2">@appointment.Notes</td>
+                    <td class="col-sm-2">
+                        <button @onclick="@(async () => ToggleEditForm(appointment.AppointmentId))" class="oi oi-pencil" style="background-color:transparent;border:none" aria-hidden="true">Edit</button>
+                        <button @onclick="@(async () => await DeleteAppointment(appointment.AppointmentId))" class="oi oi-trash" style="background-color:transparent;border:none;color:darkred" aria-hidden="true">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <br />
+    <br />
+
+    <!-- Form per modificare un appuntamento esistente -->
+    @if (showEditForm)
+    {
+        <EditForm Model="@selectedAppointment" OnValidSubmit="@EditAppointment">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <InputDate id="date" class="form-control" @bind-Value="@selectedAppointment.Date" />
+                <ValidationMessage For="@(() => selectedAppointment.Date)" />
+            </div>
+            
+            <div class="form-group">
+                <label for="desc">Description:</label>
+                <InputText id="desc" class="form-control" @bind-Value="@selectedAppointment.Description" />
+                <ValidationMessage For="@(() =>selectedAppointment.Description)" />
+            </div>
+
+            <div class="form-group">
+                <label for="notes">Notes:</label>
+                <InputText id="notes" class="form-control" @bind-Value="@selectedAppointment.Notes" />
+                <ValidationMessage For="@(() =>selectedAppointment.Notes)"/>
+            </div>
+            
+            <br />
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+        </EditForm>
+    }
+}
+else
+{
+    <p>No appointments found.</p>
+}
+
+@code {
+    List<Appointment> appointments;
+    List<Patient> patients;
+    DateTime selectedDate = DateTime.Today;
+    int selectedPatientId;
+    string description;
+    string notes;
+
+    private bool showForm = false;
+
+    private bool showEditForm = false;
+
+    private Appointment selectedAppointment;
+
+    protected override async Task OnInitializedAsync()
+    {
+        appointments = await appointmentService.GetAllAppointmentsAsync();
+        patients = await appointmentService.GetAllPatientsAsync();
+    }
+
+    async Task AddAppointment()
+    {
+        if (selectedPatientId != 0 && !string.IsNullOrWhiteSpace(description))
+        {
+            var newAppointment = new Appointment
+                {
+                    Date = selectedDate,
+                    Description = description,
+                    Notes = notes,
+                    Patient = patients.FirstOrDefault(p => p.PatientId == selectedPatientId)
+                };
+            await appointmentService.AddAppointmentAsync(newAppointment);
+            appointments = await appointmentService.GetAllAppointmentsAsync();
+            selectedPatientId = 0;
+            description = string.Empty;
+            notes = string.Empty;
+            showForm=false;
+        }
+    }
+
+    private async Task DeleteAppointment(int appointmentId)
+    {
+        await appointmentService.DeleteAppointmentAsync(appointmentId);
+        appointments = await appointmentService.GetAllAppointmentsAsync();
+        StateHasChanged();
+    }
+
+    private async Task EditAppointment()
+    {
+        await appointmentService.UpdateAppointmentAsync(selectedAppointment);
+        showEditForm = false;
+        StateHasChanged();
+    }
+
+    private void ToggleEditForm(int appointmentId)
+    {
+        showEditForm = true;
+        selectedAppointment = appointments.FirstOrDefault(a => a.AppointmentId == appointmentId);
+    }
+
+    private void Cancel()
+    {
+        selectedAppointment = null;
+        selectedDate= DateTime.Today;
+
+        showEditForm = false;
+        showForm = false;
+    }
+}
+
+<style>
+    .form-container {
+        max-width: 400px;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: #fff;
+    }
+</style>

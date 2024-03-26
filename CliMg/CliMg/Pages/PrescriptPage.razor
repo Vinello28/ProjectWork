@@ -14,67 +14,67 @@
 <br />
 
 
-    @if (showForm)
-    {
-        @if(Patients!=null){
-            <h2>Select a patient</h2>
-            <select @bind="selectedPatientId">
-                @foreach (var patient in Patients)
-                {
-                    <option value="@patient.PatientId">@($"{patient.Name} {patient.Surname}")</option>
-                }
-            </select>
-        }else{
-            <div align="center">
-                <div class="spinner-border text-primary" role="status"></div>
-            </div>
-        }
+@if (showForm){
 
-        @if(selectedPatient!=null && selectedPatientId!=0) {
+    @if(Patients!=null){
+        <h2>Select a patient</h2>
+        <select @bind="selectedPatientId">
+            @foreach (var patient in Patients)
+            {
+                <option value="@patient.PatientId">@($"{patient.Name} {patient.Surname}")</option>
+            }
+        </select>
+    }else{
+        <div align="center">
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
+    }
+
+    @if(selectedPatient!=null && selectedPatientId!=0) {
             
-            <EditForm Model="@prescription" OnValidSubmit="@AddPrescription">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
+        <EditForm Model="@prescription" OnValidSubmit="@AddPrescription">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
 
-            <div class="form-group">
-                <label for="drug">Drug:</label>
-                <InputText id="drug" class="form-control" @bind-Value="@prescription.Drug" />
-                <ValidationMessage For="@(() =>prescription.Drug)" />
-            </div>
+        <div class="form-group">
+            <label for="drug">Drug:</label>
+            <InputText id="drug" class="form-control" @bind-Value="@prescription.Drug" />
+            <ValidationMessage For="@(() =>prescription.Drug)" />
+        </div>
 
-            <div class="form-group">
-                <label for="dosage">Dosage(mg):</label>
-                <InputNumber id="dosage" class="form-control" @bind-Value="@prescription.Dosage" />
-                <ValidationMessage For="@(() => prescription.Dosage)" />
-            </div>
+        <div class="form-group">
+            <label for="dosage">Dosage(mg):</label>
+            <InputNumber id="dosage" class="form-control" @bind-Value="@prescription.Dosage" />
+            <ValidationMessage For="@(() => prescription.Dosage)" />
+        </div>
 
-            <div class="form-group">
-                <label for="frequency">Frequency:</label>
-                <InputText id="frequency" class="form-control" @bind-Value="@prescription.Frequency" />
-                <ValidationMessage For="@(() => prescription.Frequency)" />
-            </div>
+        <div class="form-group">
+            <label for="frequency">Frequency:</label>
+            <InputText id="frequency" class="form-control" @bind-Value="@prescription.Frequency" />
+            <ValidationMessage For="@(() => prescription.Frequency)" />
+        </div>
 
-            <div class="form-group">
-                <label for="duration">Duration(days):</label>
-                <InputDate id="duration" class="form-control" @bind-Value="@prescription.Duration" />
-                <ValidationMessage For="@(() => prescription.Duration)" />
-            </div>
+        <div class="form-group">
+            <label for="duration">Duration(days):</label>
+            <InputDate id="duration" class="form-control" @bind-Value="@prescription.Duration" />
+            <ValidationMessage For="@(() => prescription.Duration)" />
+        </div>
 
-            <div class="form-group">
-                <label for="notes">Notes:</label>
-                <InputText id="notes" class="form-control" @bind-Value="@prescription.Notes" />
-                <ValidationMessage For="@(() => prescription.Notes)" />
-            </div>
-            <br />
-            <button type="submit" class="btn btn-primary">Add Prescription</button>
-            <button type="button" class="btn btn-secondary" @onclick="ToggleForm">Cancel</button>
-            </EditForm>
-        }
+        <div class="form-group">
+            <label for="notes">Notes:</label>
+            <InputText id="notes" class="form-control" @bind-Value="@prescription.Notes" />
+            <ValidationMessage For="@(() => prescription.Notes)" />
+        </div>
+        <br />
+        <button type="submit" class="btn btn-primary">Add Prescription</button>
+        <button type="button" class="btn btn-secondary" @onclick="ToggleForm">Cancel</button>
+        </EditForm>
     }
-    else
-    {
-        <button class="oi oi-people" @onclick="ToggleForm">Add Prescription</button>
-    }
+}
+else
+{
+    <button class="oi oi-people" @onclick="ToggleForm">Add Prescription</button>
+}
 
 
     @if (Prescriptions == null)
@@ -124,48 +124,47 @@
             </tbody>
         </table>
 
-        @if (SelectedPrescription != null && showForm == false)
+        @if (showEditForm && SelectedPrescription!=null)
         {
             <h2>Edit Prescription</h2>
 
             <EditForm Model="@SelectedPrescription" OnValidSubmit="@SubmitEditPrescription">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
+            <DataAnnotationsValidator />
+            <ValidationSummary />
 
-                <div class="form-group">
-                    <label for="drug">Drug:</label>
-                    <InputText id="drug" class="form-control" @bind-Value="@prescription.Drug" />
-                    <ValidationMessage For="@(() =>prescription.Drug)" />
-                </div>
+            <div class="form-group">
+                <label for="drug">Drug:</label>
+                <InputText id="drug" class="form-control" @bind-Value="@SelectedPrescription.Drug" />
+                <ValidationMessage For="@(() =>SelectedPrescription.Drug)" />
+            </div>
 
-                <div class="form-group">
-                    <label for="dosage">Dosage(mg):</label>
-                    <InputNumber id="dosage" class="form-control" @bind-Value="@prescription.Dosage" />
-                    <ValidationMessage For="@(() => prescription.Dosage)" />
-                </div>
+            <div class="form-group">
+                <label for="dosage">Dosage(mg):</label>
+                <InputNumber id="dosage" class="form-control" @bind-Value="@SelectedPrescription.Dosage" />
+                <ValidationMessage For="@(() => SelectedPrescription.Dosage)" />
+            </div>
 
-                <div class="form-group">
-                    <label for="frequency">Frequency:</label>
-                    <InputNumber id="frequency" class="form-control" @bind-Value="@prescription.Frequency" />
-                    <ValidationMessage For="@(() => prescription.Frequency)" />
-                </div>
+            <div class="form-group">
+                <label for="frequency">Frequency:</label>
+                <InputText id="frequency" class="form-control" @bind-Value="@SelectedPrescription.Frequency" />
+                <ValidationMessage For="@(() => SelectedPrescription.Frequency)" />
+            </div>
 
-                <div class="form-group">
-                    <label for="duration">Duration(days):</label>
-                    <InputDate id="duration" class="form-control" @bind-Value="@prescription.Duration" />
-                    <ValidationMessage For="@(() => prescription.Duration)" />
-                </div>
+            <div class="form-group">
+                <label for="duration">Duration(days):</label>
+                <InputDate id="duration" class="form-control" @bind-Value="@SelectedPrescription.Duration" />
+                <ValidationMessage For="@(() => SelectedPrescription.Duration)" />
+            </div>
 
-                <div class="form-group">
-                    <label for="notes">Notes:</label>
-                    <InputText id="notes" class="form-control" @bind-Value="@prescription.Notes" />
-                    <ValidationMessage For="@(() => prescription.Notes)" />
-                </div>
-         
-                <br />
-                <button type="submit" class="btn btn-primary">Update prescription</button>
-                <button type="button" class="btn btn-secondary" @onclick="CancelEditPrescription">Cancel</button>
-            </EditForm>
+            <div class="form-group">
+                <label for="notes">Notes:</label>
+                <InputText id="notes" class="form-control" @bind-Value="@SelectedPrescription.Notes" />
+                <ValidationMessage For="@(() => SelectedPrescription.Notes)" />
+            </div>
+            <br />
+            <button type="submit" class="btn btn-primary">Update prescription</button>
+            <button type="button" class="btn btn-secondary" @onclick="CancelEditPrescription">Cancel</button>
+        </EditForm>
         }
     }
 
@@ -184,6 +183,8 @@
 
     private bool showForm = false;
 
+    private bool showEditForm = false;
+
     protected override async Task OnInitializedAsync()
     {
         selectedPatientId = 0;
@@ -193,7 +194,7 @@
 
     protected override void OnParametersSet()
     {
-        
+
         if (selectedPatientId != 0)
         {
             selectedPatient = Patients.FirstOrDefault(p => p.PatientId == selectedPatientId);
@@ -214,19 +215,21 @@
 
     private void EditPrescription(Prescription p)
     {
+        showForm = false;
+        showEditForm = true;
         SelectedPrescription = p;
     }
 
     private async Task SubmitEditPrescription()
     {
         await prescriptionService.UpdatePrescriptionAsync(SelectedPrescription);
-        SelectedPrescription= null;
+        SelectedPrescription=null;
         Refresh();
     }
 
     private void CancelEditPrescription()
     {
-        SelectedPrescription = new Prescription();
+        SelectedPrescription = null;
         Refresh();
 
     }
@@ -250,6 +253,7 @@
     private async Task Refresh()
     {
         showForm = false;
+        showEditForm = false;
         selectedPatient=null;
         selectedPatientId = 0;
         prescription=new Prescription();

@@ -1,0 +1,227 @@
+﻿@page "/recordpage"
+
+@using Data.Models;
+@using Data.Services;
+@inject MedicalRecordService medicalRecordService;
+
+
+<h1>RecordPage</h1>
+
+<br />
+
+@if (!showForm && !showEditForm)
+{
+    <button class="oi oi-plus" style="background-color:transparent;border:none; width:150px" @onclick="ToggleForm">Add Record</button>
+}
+@if (showForm)
+{ 
+    <div class="form-group">
+            <label for="patient">Patient:</label>
+            <select class="form-select-sm" @bind="selectedPatientId">
+                @foreach (var patient in patients)
+                {
+                    <option value="@patient.PatientId">@($"{patient.Name} {patient.Surname}")</option>
+                }
+            </select>
+    </div>
+    @if(selectedPatientId!=0){
+        tmp.Patient=patients.FirstOrDefault(p => p.PatientId == selectedPatientId);
+    }
+
+    @if(selectedPatientId!=0 && selectedPatientId!=null){
+        <EditForm Model="@tmp" OnValidSubmit="@AddRecord">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+       
+        <div class="form-group">
+            <label for="date">Date:</label>
+            <InputDate id="date" class="form-control" @bind-Value="@tmp.Date" />
+            <ValidationMessage For="@(() => tmp.Date)" />
+        </div>
+
+        <div class="form-group">
+            <label for="symptoms">Symptoms:</label>
+            <InputText id="symptoms" class="form-control" @bind-Value="@tmp.Symptoms" />
+            <ValidationMessage For="@(() => tmp.Symptoms)" />
+        </div>
+
+        <div class="form-group">
+            <label for="diagnosis">Diagnosis:</label>
+            <InputText id="diagnosis" class="form-control" @bind-Value="@tmp.Diagnosis" />
+            <ValidationMessage For="@(() => tmp.Diagnosis)" />
+        </div>
+        
+        <div class="form-group">
+            <label for="treatment">Treatment:</label>
+            <InputText id="treatment" class="form-control" @bind-Value="@tmp.Treatment" />
+            <ValidationMessage For="@(() => tmp.Treatment)" />
+        </div>
+
+        <div class="form-group">
+            <label for="notes">Notes:</label>
+            <InputText id="notes" class="form-control" @bind-Value="@tmp.Notes" />
+            <ValidationMessage For="@(() => tmp.Notes)" />
+        </div>
+
+        <br />
+        <button type="submit" class="btn btn-primary">Add Record</button>
+        <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+    </EditForm>
+    }
+ 
+}
+
+@if (showEditForm && !showForm)
+{
+    <EditForm Model="@selectedRecord" OnValidSubmit="@EditRecord">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="date">Date:</label>
+            <InputDate id="date" class="form-control" @bind-Value="@selectedRecord.Date" />
+            <ValidationMessage For="@(() => selectedRecord.Date)" />
+        </div>
+
+        <div class="form-group">
+            <label for="symptoms">Symptoms:</label>
+            <InputText id="symptoms" class="form-control" @bind-Value="@selectedRecord.Symptoms" />
+            <ValidationMessage For="@(() => selectedRecord.Symptoms)" />
+        </div>
+
+        <div class="form-group">
+            <label for="diagnosis">Diagnosis:</label>
+            <InputText id="diagnosis" class="form-control" @bind-Value="@selectedRecord.Diagnosis" />
+            <ValidationMessage For="@(() => selectedRecord.Diagnosis)" />
+        </div>
+        
+        <div class="form-group">
+            <label for="treatment">Treatment:</label>
+            <InputText id="treatment" class="form-control" @bind-Value="@selectedRecord.Treatment" />
+            <ValidationMessage For="@(() => selectedRecord.Treatment)" />
+        </div>
+
+        <div class="form-group">
+            <label for="notes">Notes:</label>
+            <InputText id="notes" class="form-control" @bind-Value="@selectedRecord.Notes" />
+            <ValidationMessage For="@(() => selectedRecord.Notes)" />
+         </div>
+
+        <br />
+        <button type="submit" class="btn btn-primary">Update Record</button>
+        <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+
+    </EditForm>
+}
+
+@if (medicalRecords != null && !showForm)
+{
+    <table align="center" class="table table-striped table-hover table-responsive table-responsive-sm">
+        <thead class="table-primary">
+            <tr class="row">
+                <th class="col-sm-2">Date</th>
+                <th class="col-sm-2">Patient</th>
+                <th class="col-sm-2">Symptoms</th>
+                <th class="col-sm-2">Diagnosis</th>
+                <th class="col-sm-2">Treatment</th>
+                <th class="col-sm-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in medicalRecords)
+            {
+                <tr class="row">
+                    <td class="col-sm-2">@record.Date.ToShortDateString()</td>
+                    <td class="col-sm-2">@record.Patient.PatientId</td>
+                    <td class="col-sm-2">@record.Symptoms</td>
+                    <td class="col-sm-2">@record.Diagnosis</td>
+                    <td class="col-sm-2">@record.Treatment</td>
+                    <td class="col-sm-2">
+                        <button class="oi oi-pencil" style="background-color:transparent;border:none" @onclick="() => ToggleEditForm(record)">Edit</button>
+                        <button class="oi oi-trash" style="background-color:transparent;border:none;color:darkred" @onclick="() => DeleteRecord(record)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No records found.</p>
+}
+
+
+
+@code {
+    List<Record> medicalRecords { get; set;}
+    List<Patient> patients { get; set; }
+
+    private Record selectedRecord = null;
+
+    private bool showForm = false;
+
+    private int selectedPatientId;
+    private bool showEditForm = false;
+
+    private Record tmp =null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        medicalRecords = await medicalRecordService.GetAllMedicalRecordsAsync();
+        patients = await medicalRecordService.GetAllPatientsAsync();
+    }
+
+
+    private async Task DeleteRecord(Record x)
+    {
+        await medicalRecordService.DeleteMedicalRecordAsync(x);
+        medicalRecords = await medicalRecordService.GetAllMedicalRecordsAsync();
+        await Refresh();
+    }
+
+    private async Task EditRecord()
+    {
+        await medicalRecordService.UpdateMedicalRecordAsync(selectedRecord);
+        await Refresh();
+    }
+
+    private void ToggleForm()
+    {
+        showForm = !showForm;
+        tmp= new Record();
+    }
+
+    private void ToggleEditForm(Record record)
+    {
+
+        selectedRecord = record;
+        showEditForm = true;
+    }
+
+    private async void AddRecord()
+    {
+        tmp.Patient = patients.FirstOrDefault(p => p.PatientId == selectedPatientId);
+        System.Console.WriteLine(tmp.Patient.Name);
+        await medicalRecordService.AddMedicalRecordAsync(tmp);
+        await Refresh();
+    }
+
+    //method to refresh the page
+    private async Task Refresh()
+    {
+        showForm = false;
+        tmp = new Record();
+        medicalRecords = await medicalRecordService.GetAllMedicalRecordsAsync();
+        StateHasChanged();
+    }
+
+    private void Cancel()
+    {
+        showEditForm = false;
+        showForm = false;
+        selectedRecord = null;
+
+        StateHasChanged();
+    }
+
+}

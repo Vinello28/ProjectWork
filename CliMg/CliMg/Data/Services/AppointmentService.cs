@@ -86,5 +86,15 @@ namespace CliMg.Data.Services
         {
             return await _context.Appointments.Where(a => a.Date == date).ToListAsync();
         }
+
+        /// <summary>
+        /// Method to get all Patients
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<Patient>> GetAllPatientsAsync()
+        {
+            return await _context.Patients.ToListAsync();
+        }
+        
     }
 }

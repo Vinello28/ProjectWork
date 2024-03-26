@@ -18,6 +18,7 @@ namespace CliMg.Data.Models
 
         public string Notes { get; set; }
 
+
         [Required]
         [ForeignKey("PatientId")]
         public Patient Patient { get; set; }
