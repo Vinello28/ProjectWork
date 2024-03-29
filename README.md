@@ -30,14 +30,14 @@ his application is designed to help manage a clinic, allowing users to register 
    
 4. Once the application is running, open your browser and navigate to https://localhost:XXXX.
 
-##Machine Learning Model Configuration
+## Machine Learning Model Configuration
 
 To utilize machine learning algorithms for disease prediction, ensure that you use relevant data to train the model to make accurate predictions.
 
-##Contribute
+## Contribute
 
 If you wish to contribute to this project, you are welcome to do so! You can contribute by reporting issues, suggesting improvements, or submitting pull requests directly on GitHub.
 
-##License
+## License
 
 This project is licensed under the terms of the License. For further details, please refer to the LICENSE file.
