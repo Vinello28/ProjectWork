@@ -18,7 +18,7 @@ his application is designed to help manage a clinic, allowing users to register 
 1. Clone the repository to your local machine:
 
    ```bash
-   git clone https://github.com/username/clinica-manager-blazor.git
+   git clone https://github.com/username/ProjectWork.git
 
 2. Open the project in your preferred IDE (Visual Studio 2022 or Visual Studio Code).
 
