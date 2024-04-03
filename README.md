@@ -1,12 +1,11 @@
-# ProjectWork
+# Project Work
 
-his application is designed to help manage a clinic, allowing users to register patients, manage their medical records, and utilize machine learning algorithms to predict diseases.
+This application is designed to help manage a clinic, allowing users to register patients, manage their medical records.
 
 ## Key Features
 
 - **Patient Management**: Register new patients, view and edit their basic information.
 - **Medical Record Management**: Add new medical records for each patient, view the history of existing medical records, and update details as needed.
-- **Disease Prediction**: Utilize machine learning algorithms to predict potential diseases based on patient data and their medical records.
 
 ## Prerequisites
 
