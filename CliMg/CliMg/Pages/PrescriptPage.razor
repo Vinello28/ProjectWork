@@ -73,7 +73,11 @@
 }
 else
 {
-    <button class="oi oi-people" @onclick="ToggleForm">Add Prescription</button>
+    <br />
+    <button class="oi oi-people" style="background-color:transparent;border:none; width:150px" @onclick="ToggleForm">Add Prescription</button>
+    <br />
+    <br />
+    
 }
 
 
@@ -93,31 +97,31 @@ else
     }
     else if (Prescriptions != null && !showForm)
     {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Patient</th>
-                    <th>Drug</th>
-                    <th>Dosage</th>
-                    <th>Freq</th>
-                    <th>Duration</th>
-                    <th>Notes</th>
-                    <th>Actions</th>
+    <table align="center" class="table table-striped table-hover table-responsive table-responsive-sm">
+        <thead class="table-primary">
+                <tr class="row">
+                <th class="col-sm">Patient</th>
+                <th class="col-sm">Drug</th>
+                <th class="col-sm">Dosage</th>
+                <th class="col-sm">Freq</th>
+                <th class="col-sm">Duration</th>
+                <th class="col-sm">Notes</th>
+                <th class="col-sm">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var prescription in Prescriptions)
                 {
-                    <tr>
-                        <td>@prescription.PatientId</td>
-                        <td>@prescription.Drug</td>
-                        <td>@prescription.Dosage</td>
-                        <td>@prescription.Frequency</td>
-                        <td>@prescription.Duration.ToShortDateString()</td>
-                        <td>@prescription.Notes</td>
-                        <td>
-                            <button class="btn btn-secondary" @onclick="() => EditPrescription(prescription)">Edit</button>
-                            <button class="btn btn-danger" @onclick="() => DeletePrescription(prescription)">Delete</button>
+                    <tr class="row">
+                    <td class="col-sm">@prescription.PatientId</td>
+                    <td class="col-sm">@prescription.Drug</td>
+                    <td class="col-sm">@prescription.Dosage</td>
+                    <td class="col-sm">@prescription.Frequency</td>
+                    <td class="col-sm">@prescription.Duration.ToShortDateString()</td>
+                    <td class="col-sm">@prescription.Notes</td>
+                    <td class="col-sm">
+                        <button class="oi oi-pencil" style="background-color:transparent;border:none" @onclick="() => EditPrescription(prescription)">Edit</button>
+                        <button class="oi oi-trash" style="background-color:transparent;border:none;color:darkred" @onclick="() => DeletePrescription(prescription)">Delete</button>
                         </td>
                     </tr>
                 }

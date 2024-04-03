@@ -11,7 +11,10 @@
 
 @if (!showForm && !showEditForm)
 {
+    <br />
     <button class="oi oi-plus" style="background-color:transparent;border:none; width:150px" @onclick="ToggleForm">Add Record</button>
+    <br />
+    <br />
 }
 @if (showForm)
 { 
@@ -144,6 +147,7 @@
             }
         </tbody>
     </table>
+
 }
 else
 {

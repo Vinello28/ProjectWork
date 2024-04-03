@@ -44,6 +44,7 @@
 }
 else
 {
+    <br />
     <button class="oi oi-people" style="border:none;background-color:transparent;width:150px" @onclick="ToggleForm">Add Patient</button>
     <br />
     <br />
@@ -82,8 +83,8 @@ else if(showForm==false)
                     <td class="col-sm-2">@patient.DateOfBirth.ToShortDateString()</td>
                     <td class="col-sm-2">@patient.Age()</td>
                     <td class="col-sm-2">
-                        <button class="btn btn-secondary" @onclick="() => EditPatient(patient)">Edit</button>
-                        <button class="btn btn-danger" @onclick="() => DeletePatient(patient)">Delete</button>
+                            <button class="oi oi-pencil" style="background-color:transparent;border:none" @onclick="() => EditPatient(patient)">Edit</button>
+                        <button class="oi oi-trash" style="background-color:transparent;border:none;color:darkred" @onclick="() => DeletePatient(patient)">Delete</button>
                     </td>
                 </tr>
             }
